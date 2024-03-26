@@ -47,8 +47,8 @@ const TicketStatusMenu = () => {
         leaveTo="transform opacity-0 scale-95"
       >
         <Menu.Items className="origin-top-right absolute left-0 ml-1 z-50 rounded-md bg-white shadow-lg mt-1 border border-gray-200">
-          {FILTERS.map((item) => (
-            <Menu.Item>
+          {FILTERS.map((item, i) => (
+            <Menu.Item key={i}>
               <button
                 className="w-full text-left px-4 py-2 text-sm leading-5 font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 focus:outline-none focus:bg-gray-100 focus:text-gray-900 whitespace-nowrap"
                 onClick={() => setFilter(item.filter)}
