@@ -17,7 +17,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ user, message }) => {
             data-user={message?.side === 0}
             className="font-semibold text-blue-600 data-[user=true]:text-red-600"
           >
-            {message?.side === 0 ? user?.name : "You"}
+            {message?.sender}
           </span>
         </div>
         <div className="w-full">

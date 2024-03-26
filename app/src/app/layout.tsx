@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import { TicketInfoProvider } from "@/hooks/useTicketInfo";
+import { AuthProvider } from "@/hooks/useAuth";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +22,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <main className="container flex bg-white">
           <TicketInfoProvider>
-            <Sidebar />
-            <div className="flex flex-col h-screen w-full">{children}</div>
+            <AuthProvider>
+              <Sidebar />
+              <div className="flex flex-col h-screen w-full">{children}</div>
+            </AuthProvider>
           </TicketInfoProvider>
         </main>
       </body>

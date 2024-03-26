@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import useWebSocket from "react-use-websocket";
+import useAuth from "./useAuth";
 
-interface AuthType {
+interface TicketInfoType {
   allTickets: any;
   tickets: any;
   fetchTicketHistory: any;
@@ -23,7 +24,8 @@ const defaultVal = {
   setFilter: () => {},
 };
 
-export const TicketInfoContext = React.createContext<AuthType>(defaultVal);
+export const TicketInfoContext =
+  React.createContext<TicketInfoType>(defaultVal);
 
 export default function useTicketInfo() {
   return React.useContext(TicketInfoContext);
@@ -38,6 +40,7 @@ export const TicketInfoProvider: React.FC<{ children: React.ReactNode }> = ({
   const [allTickets, setAllTickets] = useState<any>([]);
   const [tickets, setTickets] = useState<any>({});
   const [filter, setFilter] = useState([0, 1]);
+  const { firstName, lastName } = useAuth();
 
   useEffect(() => {
     sendMessage(JSON.stringify({ payload: "all-tickets" }));
@@ -105,12 +108,14 @@ export const TicketInfoProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const sendQueryAnswer = (id: number, text: string) => {
     let updatedData = { ...tickets };
+    const name = `${firstName} ${lastMessage ?? ""}`.trimEnd();
     updatedData[id].messages = [
       ...(updatedData[id]?.messages ?? []),
       {
         id: -1,
         text,
         side: 1,
+        sender: name,
         date: Date.now(),
       },
     ];
@@ -123,12 +128,18 @@ export const TicketInfoProvider: React.FC<{ children: React.ReactNode }> = ({
         id: -1,
         text,
         side: 1,
+        sender: name,
         date: Date.now(),
       },
     ];
     setAllTickets(updatedAllData);
     sendMessage(
-      JSON.stringify({ payload: "answer", ticket: id, message: text })
+      JSON.stringify({
+        payload: "answer",
+        ticket: id,
+        message: text,
+        sender: name,
+      })
     );
   };
 

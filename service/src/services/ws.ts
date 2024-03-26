@@ -22,7 +22,7 @@ wss.on("connection", (ws) => {
       const data = JSON.parse(msg.toString());
       console.log(data);
       if (data.payload === "answer") {
-        if (data.ticket && data.message) {
+        if (data.ticket && data.message && data.sender) {
           const sent = await bot.api.sendMessage(data.ticket, data.message);
           console.log(sent);
           const result = await Ticket.updateOne(
@@ -34,6 +34,7 @@ wss.on("connection", (ws) => {
                   text: data.message,
                   date: Date.now(),
                   side: 1,
+                  sender: data.sender,
                 },
               },
             }

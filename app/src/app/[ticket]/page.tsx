@@ -3,13 +3,21 @@
 import ChatField from "@/components/ChatField";
 import ChatInput from "@/components/ChatInput";
 import Header from "@/components/Header";
+import useAuth from "@/hooks/useAuth";
 import useTicketInfo from "@/hooks/useTicketInfo";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { useEffect } from "react";
 
 const TicketPage = () => {
   const { ticket } = useParams();
   const { tickets, fetchTicketHistory } = useTicketInfo();
+  const { isAuth } = useAuth();
+
+  console.log(isAuth);
+
+  useEffect(() => {
+    if (!isAuth) redirect("/");
+  }, []);
 
   useEffect(() => {
     if (ticket) {
@@ -18,7 +26,9 @@ const TicketPage = () => {
   }, [ticket]);
 
   const ticketData = ticket ? tickets?.[Number(ticket.toString())] : undefined;
-  return !ticketData ? (
+  return !isAuth ? (
+    <></>
+  ) : !ticketData ? (
     <div className="flex items-center justify-center flex-1 text-sm font-semibold text-[#404749]/[0.5]">
       Please select a chat
     </div>

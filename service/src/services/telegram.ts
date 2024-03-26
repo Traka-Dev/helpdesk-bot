@@ -24,12 +24,10 @@ bot.on("message", async (ctx) => {
     );
 
     try {
+      const name = `${first_name} ${last_name ?? ""}`.trimEnd();
       await bot.api.sendMessage(
         config.TG_CHANNEL_ID,
-        `<b>From</b> <a href="${config.HELP_DESK_URL}/${id}">${[
-          first_name,
-          last_name,
-        ].join(" ")}</a> #id${id}\n-------\n${message.text}`,
+        `<b>From</b> <a href="${config.HELP_DESK_URL}/${id}">${name}</a> #id${id}\n-------\n${message.text}`,
         {
           parse_mode: "HTML",
           reply_markup: {
@@ -45,7 +43,7 @@ bot.on("message", async (ctx) => {
         }
       );
 
-      const updated = { id: message_id, text, date: Date.now(), side: 0 };
+      const updated = { id: message_id, text, date: Date.now(), sender: name };
 
       const result = await Ticket.updateOne(
         { "user.id": id },
@@ -58,7 +56,10 @@ bot.on("message", async (ctx) => {
 
       if (!result.modifiedCount) {
         const ticket = new Ticket();
-        ticket.user = { id, name: `${first_name} ${last_name}`.trimEnd() };
+        ticket.user = {
+          id,
+          name,
+        };
         ticket.messages.push(updated);
         await ticket.save();
       }
@@ -72,10 +73,11 @@ bot.on("message", async (ctx) => {
               id: message_id,
               date: updated.date,
               side: 0,
+              sender: name,
             },
             user: {
               id,
-              name: `${first_name} ${last_name}`.trimEnd(),
+              name,
             },
           },
         })

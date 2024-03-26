@@ -19,6 +19,7 @@ const TicketSchema = new mongoose.Schema(
         text: String,
         date: Date,
         side: Number,
+        sender: String,
       },
     ],
     status: {
