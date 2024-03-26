@@ -43,7 +43,13 @@ bot.on("message", async (ctx) => {
         }
       );
 
-      const updated = { id: message_id, text, date: Date.now(), sender: name };
+      const updated = {
+        id: message_id,
+        text,
+        date: Date.now(),
+        sender: name,
+        side: 0,
+      };
 
       const result = await Ticket.updateOne(
         { "user.id": id },

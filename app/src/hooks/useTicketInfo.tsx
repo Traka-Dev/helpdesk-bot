@@ -108,7 +108,7 @@ export const TicketInfoProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const sendQueryAnswer = (id: number, text: string) => {
     let updatedData = { ...tickets };
-    const name = `${firstName} ${lastMessage ?? ""}`.trimEnd();
+    const name = `${firstName} ${lastName ?? ""}`.trimEnd();
     updatedData[id].messages = [
       ...(updatedData[id]?.messages ?? []),
       {
